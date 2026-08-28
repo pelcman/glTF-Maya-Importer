@@ -1,0 +1,72 @@
+// glTFImporterOptions.mel
+//
+// Option UI for the glTF-Maya-Importer file translator.
+// Called by Maya through registerFileTranslator's optionScript.
+//
+//	Parameters:
+//		$parent	- the elf parent layout for this options layout
+//		$action	- "query" or "post"
+//		$initialSettings - the current option settings ("key=value;" pairs)
+//		$resultCallback - the proc to call with the new settings on "query"
+
+global proc int glTFImporterOptions(string $parent,
+                                    string $action,
+                                    string $initialSettings,
+                                    string $resultCallback)
+{
+    int $bResult = 0;
+
+    if ($action == "post")
+    {
+        setParent $parent;
+
+        columnLayout -adj true glTFImporterOptsCol;
+            checkBoxGrp -numberOfCheckBoxes 1
+                -label "Animations" -value1 1
+                glTFImportAnimationsCB;
+            checkBoxGrp -numberOfCheckBoxes 1
+                -label "Skins" -value1 1
+                glTFImportSkinsCB;
+            checkBoxGrp -numberOfCheckBoxes 1
+                -label "Blend Shapes" -value1 1
+                glTFImportBlendShapesCB;
+
+        // apply current settings
+        string $optionList[];
+        tokenize($initialSettings, ";", $optionList);
+        for ($option in $optionList)
+        {
+            string $kv[];
+            tokenize($option, "=", $kv);
+            if (size($kv) != 2)
+            {
+                continue;
+            }
+            int $value = (int)$kv[1];
+            if ($kv[0] == "import_animations")
+            {
+                checkBoxGrp -e -value1 $value glTFImportAnimationsCB;
+            }
+            else if ($kv[0] == "import_skins")
+            {
+                checkBoxGrp -e -value1 $value glTFImportSkinsCB;
+            }
+            else if ($kv[0] == "import_blendshapes")
+            {
+                checkBoxGrp -e -value1 $value glTFImportBlendShapesCB;
+            }
+        }
+        $bResult = 1;
+    }
+    else if ($action == "query")
+    {
+        string $option = "";
+        $option += ("import_animations=" + `checkBoxGrp -q -value1 glTFImportAnimationsCB` + ";");
+        $option += ("import_skins=" + `checkBoxGrp -q -value1 glTFImportSkinsCB` + ";");
+        $option += ("import_blendshapes=" + `checkBoxGrp -q -value1 glTFImportBlendShapesCB` + ";");
+        eval($resultCallback + " \"" + $option + "\"");
+        $bResult = 1;
+    }
+
+    return $bResult;
+}
