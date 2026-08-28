@@ -86,6 +86,11 @@ $cmake = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE
 
 ### 動作確認(mayapy)
 
+回帰テストは `tests/` にある(実行方法・前提は `tests/README.md` を参照)。
+改修後は最低限 `test_smoke.py` を全対象バージョンで、フルスイートを 1 バージョンで
+実行すること。往復テストには姉妹ディレクトリの glTF-Maya-Exporter
+(`releases/` の配布バイナリ)が必要。
+
 Maya を GUI 起動せずに検証できる。Exporter の配布バイナリと組み合わせた
 往復テストが基本:
 
