@@ -26,6 +26,12 @@ Exporter が出力したファイル(既定の Draco 圧縮 GLB を含む)を Ma
 - テクスチャの `texCoord: 1`(第 2 UV セット参照)は自動リンクされません
   (Maya の UV リンクエディタで手動設定してください)
 - 複数アニメーションは 1 つのタイムラインにまとめて読み込まれます
+- glTF にはジョイント型が無いため、`skins[].joints` に列挙されたノードだけが
+  Maya の joint になります。スキンを含まないアニメーションのみのファイル
+  (glTF-Maya-Exporter の「Output animation only」で「write skin」が OFF の出力など)
+  は transform として読み込まれます
+- 読み込みは常に新しいノードを作成します。アニメーションのみのファイルを
+  シーン内の既存スケルトンに名前で適用する機能は未対応です
 - 単位は Exporter と同じ「1 glTF 単位 = Maya の UI 単位(既定 cm)」です
 
 ## インストール

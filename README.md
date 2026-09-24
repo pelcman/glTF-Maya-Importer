@@ -33,6 +33,12 @@ back into Maya, and standard glTF 2.0 assets from other tools import as well.
 - `texCoord: 1` on a texture is not auto-linked to the second UV set
   (use Maya's UV linking editor)
 - Multiple animations are imported onto the single Maya timeline
+- A node becomes a Maya joint only when a `skins[].joints` entry lists it
+  (glTF has no joint type). An animation-only file without skins (for
+  example glTF-Maya-Exporter's "Output animation only" with the "write skin"
+  option off) is imported as plain transforms
+- Importing always creates new nodes; applying an animation-only file onto
+  an existing skeleton by node name is not supported yet
 - Units follow the exporter's convention: 1 glTF unit = 1 Maya UI unit
   (centimeters by default), not 1 meter
 

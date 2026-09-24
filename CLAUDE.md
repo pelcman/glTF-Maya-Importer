@@ -130,6 +130,23 @@ print(cmds.ls(type='mesh'))
 - [ ] 複数アニメーションのクリップ分割(現状は単一タイムラインに重ね取り込み)
 - [ ] CUBICSPLINE タンジェントの厳密変換
 - [ ] macOS / Linux ビルド検証
+- [ ] **アニメーションのみ読み込み(既存スケルトンへ名前で適用)**。
+      2026-09-24 時点で設計済み・未実装(保留)。Exporter の
+      `output_animation_only=1` 出力(ノード階層 + アニメーション、メッシュ無し)を、
+      シーン内の同名ノードにキーとして流し込むオプション `import_animation_only`。
+      設計要点:
+      - ノードは `ls -long -type transform "<name>"` で短い名前一致。重複時は解決済みの
+        親を持つ候補を優先し、決まらなければ警告して新規作成。未一致ノードは新規作成
+      - Exporter が付けるファイル名ルート(メッシュ・スキン・キー無し、joint でもない
+        シーンルート)は読み飛ばし、その子をルート扱いにする
+      - 既存ノードの回転は rotateAxis / jointOrient / rotateOrder を保持したまま、
+        `rotate = rotateAxis⁻¹ × q × jointOrient⁻¹` で差し引き、ノードの rotateOrder で
+        オイラー化(Exporter は `q = rotateAxis × rotate × jointOrient` を出力)
+      - 既存の animCurve は削除して上書き、それ以外の入力接続(コンストレイント等)
+        があるアトリビュートは警告してスキップ
+      - このモードではメッシュ / マテリアル / スキンは生成しない
+      補足: Exporter 側の `output_animation_skin=1` で `skins` を書けば、現状の
+      Importer でも(新規ノードとして)joint に復元される(2026-09-16 往復確認済み)。
 
 ## Git 運用
 
